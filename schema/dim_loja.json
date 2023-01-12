@@ -1,0 +1,1 @@
+{"type": "struct", "fields": [{"name": "id_loja", "type": "integer", "nullable": true, "metadata": {}}, {"name": "cod_loja", "type": "integer", "nullable": true, "metadata": {}}, {"name": "nm_loja", "type": "string", "nullable": true, "metadata": {}}]}

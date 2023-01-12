@@ -1,0 +1,1 @@
+{"type": "struct", "fields": [{"name": "id_tempo", "type": "integer", "nullable": true, "metadata": {}}, {"name": "ano", "type": "integer", "nullable": true, "metadata": {}}, {"name": "mes", "type": "integer", "nullable": true, "metadata": {}}, {"name": "dia", "type": "integer", "nullable": true, "metadata": {}}, {"name": "dt", "type": "date", "nullable": true, "metadata": {}}]}

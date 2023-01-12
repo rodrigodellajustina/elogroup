@@ -1,0 +1,1 @@
+{"type": "struct", "fields": [{"name": "id_cliente", "type": "integer", "nullable": true, "metadata": {}}, {"name": "estado_civil", "type": "string", "nullable": true, "metadata": {}}, {"name": "sexo", "type": "string", "nullable": true, "metadata": {}}, {"name": "bairro", "type": "string", "nullable": true, "metadata": {}}]}
