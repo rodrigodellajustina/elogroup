@@ -1,4 +1,4 @@
-from pyspark.sql.types import  StructType, StringType, IntegerType, DateType, StructField
+from pyspark.sql.types import  StructType, StringType, IntegerType, DateType, StructField, NumericType
 import json
 
 def setSchema():
@@ -45,6 +45,30 @@ def setSchema():
     with open("schema/dim_cliente.json", "w") as f:
         json.dump(schemaDimCliente.jsonValue(), f)
 
+    schemaFtVendas = StructType([
+        StructField("id_loja", IntegerType()),
+        StructField("id_produto", IntegerType()),
+        StructField("id_cliente", IntegerType()),
+        StructField("id_tempo", IntegerType()),
+        StructField("qtde_vendida", IntegerType()),
+        StructField("receita_venda", NumericType())
+    ])
+
+    with open("schema/ft_vendas_tmp.json", "w") as f:
+        json.dump(schemaFtVendas.jsonValue(), f)
+
+    schemaFtVendas = StructType([
+            StructField("id_loja", IntegerType()),
+            StructField("id_produto", IntegerType()),
+            StructField("id_cliente", IntegerType()),
+            StructField("id_tempo", IntegerType()),
+            StructField("qtde_vendida", IntegerType()),
+            StructField("receita_venda", StringType())
+    ])
+
+    with open("schema/ft_vendas.json", "w") as f:
+        json.dump(schemaFtVendas.jsonValue(), f)
+
 
 def getSchema(schema : str):
 
@@ -58,7 +82,9 @@ def getTable(file : str):
     listTableFile = [["DM_Cliente.csv", "dim_cliente"],
                      ["DM_Loja.csv", "dim_loja"],
                      ["DM_Produto.csv", "dim_produto"],
-                     ["DM_Tempo.csv", "dim_tempo"]
+                     ["DM_Tempo.csv", "dim_tempo"],
+                     ["FT_Vendas.csv", "ft_vendas"],
+                     ["FT_Vendas_tmp.csv", "ft_vendas_tmp"]
                     ]
 
     return list(filter(lambda x: x[0]==file, listTableFile))[0][1]

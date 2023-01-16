@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from extract import extract_file
-from transformation import drop_nulls, transform_ft_vendas
+from transformation import drop_nulls, transform_ft_vendas, check_ft_vendas
 from load import load
 from util import PrintCustom, SettingProject
 import sys
@@ -23,6 +23,7 @@ def dim():
         df_cliente = extract_file(SPARK, "CSV", HDFSPATH+"DM_Cliente.csv")
         df_loja    = extract_file(SPARK, "CSV", HDFSPATH+"DM_Loja.csv")
         df_produto = extract_file(SPARK, "CSV", HDFSPATH+"DM_Produto.csv")
+
         PrintCustom.ok_extract()
     except Exception as e:
         PrintCustom.error_extract(e)
@@ -43,12 +44,26 @@ def dim():
     load("JDBC", df_produto, "dim_produto")
     PrintCustom.ok_load()
 
+def check():
+    #Data Valid
+    #Verificar Inconsistências de Dados...
+    load("JDBC", df_vendas, "stg_vendas")
+    print("Inconsistencias...")
+    check_ft_vendas(SPARK).show()
+
 def fat():
     #Extract
+    df_vendas = extract_file(SPARK, "CSV", HDFSPATH + "FT_Vendas.csv")
+
+    df_tempo = extract_file(SPARK, "CSV", HDFSPATH + "DM_Tempo.csv")
+    df_cliente = extract_file(SPARK, "CSV", HDFSPATH + "DM_Cliente.csv")
+    df_loja = extract_file(SPARK, "CSV", HDFSPATH + "DM_Loja.csv")
+    df_produto = extract_file(SPARK, "CSV", HDFSPATH + "DM_Produto.csv")
 
     #Transformation
     PrintCustom.info_transformation()
-    df_vendas = transform_ft_vendas(SPARK)
+    df_vendas   = drop_nulls(df_vendas)
+    df_vendas = transform_ft_vendas(SPARK, df_vendas, df_tempo, df_cliente, df_loja, df_produto)
     PrintCustom.ok_transformation()
 
     #Load DateFrame to RDBMS
@@ -57,9 +72,6 @@ def fat():
     PrintCustom.ok_load()
 
 if __name__ == '__main__':
-    if len(sys.argv) > 0:
-        if str(sys.argv[1]).lower()=="fat":
-            fat()
-        if str(sys.argv[1]).lower()=="dim":
-            dim()
-
+    #dim()
+    #fat()
+    check_ft_vendas(SPARK)
